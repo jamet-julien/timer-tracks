@@ -7,20 +7,18 @@
 [![npm](https://img.shields.io/npm/l/timer-tracks.svg?style=flat-square)](https://github.com/jamet-julien/timer-tracks/blob/master/LICENSE)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-> lorem ipsum sit amet
-
-## [Live example](https://codepen.io/jamet-julien)
+Timeline's controller with label to navigate
 
 -   [Install](#install)
 -   [Importing](#importing)
--   [sample](#sample)
+-   [Quick start](#quick)
 -   [Methods](#methods)
     -   [.update(`num`)](#update)
     -   [.goTo(`name`)](#goTo)
 
 ## Install <a id="install"></a>
 
-`npm i timer-tracks --save`  
+`npm i timer-tracks`  
 or  
 `yarn add timer-tracks`
 
@@ -29,14 +27,14 @@ or
 ### Importing <a id="importing"></a>
 
 ```js
-import package from "timer-tracks";
+import TimerTracks from "timer-tracks";
 ```
 
 ---
 
-### Sample<a id="sample"></a>
+### Quick start<a id="Quick"></a>
 
-> usage timer-tracks plugin
+Usage timer-tracks plugin.
 
 ```js
 const tracks = [
@@ -49,12 +47,12 @@ const tracks = [
 const timerTracks = TimerTracks(tracks);
 
 timerTracks.update(0);
-timerTracks.current.name; //?
-timerTracks.current.progress; //?
+timerTracks.current.name; //? intro
+timerTracks.current.progress; //? 0
 
-timerTracks.update(16);
-timerTracks.current.name; //?
-timerTracks.current.progress; //?
+timerTracks.update(15);
+timerTracks.current.name; //? start
+timerTracks.current.progress; //? .5
 ```
 
 ---
@@ -63,7 +61,7 @@ timerTracks.current.progress; //?
 
 ### .update(num) <a id="update"></a>
 
-> Set progress env and update current attribute
+Set progress current track and update `current` attribute.
 
 | argument | type     | Description       |
 | :------- | :------- | :---------------- |
@@ -79,7 +77,7 @@ timerTracks.current.progress; //? .5
 
 ### .goTo(name) <a id="goTo"></a>
 
-> Set new tracks by name
+Set current track with name.
 
 | argument | type     | Description             |
 | :------- | :------- | :---------------------- |
