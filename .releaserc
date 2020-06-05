@@ -1,5 +1,5 @@
 {
-  "repositoryUrl": "https://github.com/jamet-julien/{PACKAGE}.git",
+  "repositoryUrl": "https://github.com/jamet-julien/timer-tracks.git",
   "plugins": [
     ["@semantic-release/commit-analyzer", {
       "preset": "angular",
