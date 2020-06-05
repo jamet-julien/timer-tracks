@@ -14,6 +14,9 @@
 -   [Install](#install)
 -   [Importing](#importing)
 -   [sample](#sample)
+-   [Methods](#methods)
+    -   [.update(`num`)](#update)
+    -   [.goTo(`name`)](#goTo)
 
 ## Install <a id="install"></a>
 
@@ -35,28 +38,57 @@ import package from "timer-tracks";
 
 > usage timer-tracks plugin
 
-index.html file
-
-```html
-
-```
-
-script.js file
-
 ```js
+const tracks = [
+    { name: "intro", duration: 5 },
+    { name: "start", duration: 10 },
+    { name: "end", duration: 5 },
+    { name: "outro", duration: 20 }
+];
+
+const timerTracks = TimerTracks(tracks);
+
+timerTracks.update(0);
+timerTracks.current.name; //?
+timerTracks.current.progress; //?
+
+timerTracks.update(16);
+timerTracks.current.name; //?
+timerTracks.current.progress; //?
 ```
 
 ---
 
 ## Methods <a id="methods"></a>
 
-### .method() <a id="method"></a>
+### .update(num) <a id="update"></a>
 
-> lorem ipsum sit amet
+> Set progress env and update current attribute
 
-| argument | type     | Description |
-| :------- | :------- | :---------- |
-| `num`    | `number` | lorem ipsum |
+| argument | type     | Description       |
+| :------- | :------- | :---------------- |
+| `num`    | `number` | current progresse |
 
 ```js
+timerTracks.update(0);
+timerTracks.update(10);
+
+timerTracks.current.name; //? start
+timerTracks.current.progress; //? .5
+```
+
+### .goTo(name) <a id="goTo"></a>
+
+> Set new tracks by name
+
+| argument | type     | Description             |
+| :------- | :------- | :---------------------- |
+| `name`   | `string` | name's target on tracks |
+
+```js
+timerTracks.goto("end");
+timerTracks.update(10);
+
+timerTracks.current.name; //? end
+timerTracks.current.progress; //? 0
 ```
