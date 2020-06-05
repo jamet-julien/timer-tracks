@@ -42,4 +42,32 @@ describe("Start", () => {
         expect(timerTracks.current.name).toBe(null); //?
         expect(timerTracks.current.progress).toBe(0); //?
     });
+
+    it("goto path", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("end");
+
+        timerTracks.update(50);
+        expect(timerTracks.current.name).toBe("end"); //?
+        expect(timerTracks.current.progress).toBe(0); //?
+
+        timerTracks.update(60);
+        expect(timerTracks.current.name).toBe("end"); //?
+        expect(timerTracks.current.progress).toBe(0.5); //?
+
+        timerTracks.update(70);
+        expect(timerTracks.current.name).toBe("outro"); //?
+        expect(timerTracks.current.progress).toBe(0); //?
+    });
+
+    it("wrong goto", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("wrong");
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe(null); //?
+        expect(timerTracks.current.progress).toBe(0); //?
+    });
 });

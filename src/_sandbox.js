@@ -20,13 +20,21 @@ timerTracks.current.name; //?
 timerTracks.current.progress; //?
 
 timerTracks.goTo("end");
-timerTracks.current.name; //?
-timerTracks.current.progress; //?
 
 timerTracks.update(10);
 timerTracks.current.name; //?
 timerTracks.current.progress; //?
 
 timerTracks.update(15);
+timerTracks.current.name; //?
+timerTracks.current.progress; //?
+
+timerTracks.goTo("start");
+
+timerTracks.update(15);
+timerTracks.current.name; //?
+timerTracks.current.progress; //?
+
+timerTracks.update(20);
 timerTracks.current.name; //?
 timerTracks.current.progress; //?

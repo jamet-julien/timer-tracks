@@ -5,7 +5,12 @@ const CURRENT_DEFAULT = {
     duration: Number.MAX_SAFE_INTEGER
 };
 
-const prepareTrack = (start, track) => ({ ...track, progress: 0, start });
+const prepareTrack = (start, track) => ({
+    ...track,
+    progress: 0,
+    start,
+    end: start + track.duration
+});
 
 const initializeTracks = (tracks, timeStart) =>
     tracks.reduce(
@@ -23,25 +28,25 @@ const TimerTracks = (tracks = []) => {
     return {
         current: CURRENT_DEFAULT,
         goTo: function (targetName) {
-            index = tracks.findIndex(({ name }) => name === targetName);
-            this.current = tracksTreat[index] || CURRENT_DEFAULT;
-            this.current.progress = 0;
             tracksTreat = null;
+            index = tracks.findIndex(({ name }) => name === targetName);
+
+            this.current = tracks[index] || CURRENT_DEFAULT;
+            this.current.progress = 0;
+
+            index = index < 0 ? tracks.length : index;
         },
-        update: function (accExt = 0) {
-            let progress = -1;
-            tracksTreat =
-                tracksTreat !== null
-                    ? tracksTreat
-                    : initializeTracks(
-                          tracks.slice(index, tracks.length),
-                          accExt
-                      );
+        update: function (accExt) {
+            let progress;
 
-            index = tracksTreat.findIndex(({ start }) => start > accExt) - 1;
+            if (tracksTreat === null) {
+                tracksTreat = initializeTracks(tracks.slice(index), accExt);
+            }
+
+            index = tracksTreat.findIndex(({ end }) => end > accExt);
             this.current = tracksTreat[index] || CURRENT_DEFAULT;
-            progress = (accExt - this.current.start) / this.current.duration;
 
+            progress = (accExt - this.current.start) / this.current.duration;
             this.current.progress = Math.max(0, progress);
         }
     };
