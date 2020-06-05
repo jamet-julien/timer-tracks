@@ -39,9 +39,8 @@ const TimerTracks = (tracks = []) => {
         update: function (accExt) {
             let progress;
 
-            if (tracksTreat === null) {
-                tracksTreat = initializeTracks(tracks.slice(index), accExt);
-            }
+            tracksTreat =
+                tracksTreat ?? initializeTracks(tracks.slice(index), accExt);
 
             index = tracksTreat.findIndex(({ end }) => end > accExt);
             this.current = tracksTreat[index] || CURRENT_DEFAULT;

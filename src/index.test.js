@@ -19,28 +19,28 @@ describe("Start", () => {
     it("right path", () => {
         const timerTracks = TimerTracks(tracks);
         timerTracks.update(0);
-        expect(timerTracks.current.name).toBe("intro"); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.update(5);
-        expect(timerTracks.current.name).toBe("start"); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.update(10);
-        expect(timerTracks.current.name).toBe("start"); //?
-        expect(timerTracks.current.progress).toBe(0.5); //?
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0.5);
 
         timerTracks.update(15);
-        expect(timerTracks.current.name).toBe("end"); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.update(25);
-        expect(timerTracks.current.name).toBe("end"); //?
-        expect(timerTracks.current.progress).toBe(0.5); //?
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0.5);
 
         timerTracks.update(100);
-        expect(timerTracks.current.name).toBe(null); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
     });
 
     it("goto path", () => {
@@ -49,16 +49,16 @@ describe("Start", () => {
         timerTracks.goTo("end");
 
         timerTracks.update(50);
-        expect(timerTracks.current.name).toBe("end"); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.update(60);
-        expect(timerTracks.current.name).toBe("end"); //?
-        expect(timerTracks.current.progress).toBe(0.5); //?
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0.5);
 
         timerTracks.update(70);
-        expect(timerTracks.current.name).toBe("outro"); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe("outro");
+        expect(timerTracks.current.progress).toBe(0);
     });
 
     it("wrong goto", () => {
@@ -67,7 +67,7 @@ describe("Start", () => {
         timerTracks.goTo("wrong");
 
         timerTracks.update(0);
-        expect(timerTracks.current.name).toBe(null); //?
-        expect(timerTracks.current.progress).toBe(0); //?
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
     });
 });
