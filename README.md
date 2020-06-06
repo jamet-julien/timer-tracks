@@ -15,6 +15,8 @@ Timeline's controller with label to navigate
 -   [Methods](#methods)
     -   [.update(`num`)](#update)
     -   [.goTo(`name`)](#goTo)
+    -   [.next()](#next)
+    -   [.prev()](#prev)
 
 ## Install <a id="install"></a>
 
@@ -89,4 +91,24 @@ timerTracks.update(10);
 
 timerTracks.current.name; //? end
 timerTracks.current.progress; //? 0
+```
+
+### .next() <a id="next"></a>
+
+Set current track with the next.
+
+> the limit is null
+
+```js
+timerTracks.next();
+```
+
+### .prev() <a id="prev"></a>
+
+Set current track with the prev.
+
+> the limit is the first tracks
+
+```js
+timerTracks.prev();
 ```

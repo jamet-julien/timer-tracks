@@ -70,4 +70,44 @@ describe("Start", () => {
         expect(timerTracks.current.name).toBe(null);
         expect(timerTracks.current.progress).toBe(0);
     });
+
+    it("navigate next / prev", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.next();
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.next();
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.prev();
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("limit next / prev", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.prev();
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.goTo("outro");
+        expect(timerTracks.current.name).toBe("outro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.next();
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
+    });
 });
