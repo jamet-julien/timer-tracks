@@ -52,7 +52,7 @@ timerTracks.update(0);
 timerTracks.current.name; //? intro
 timerTracks.current.progress; //? 0
 
-timerTracks.update(15);
+timerTracks.update(10);
 timerTracks.current.name; //? start
 timerTracks.current.progress; //? .5
 ```

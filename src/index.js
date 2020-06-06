@@ -2,14 +2,15 @@ const CURRENT_DEFAULT = {
     name: null,
     progress: null,
     start: Number.MAX_SAFE_INTEGER,
-    duration: Number.MAX_SAFE_INTEGER
+    duration: Infinity
 };
 
-const prepareTrack = (start, track) => ({
-    ...track,
+const prepareTrack = (start, { name, duration = Infinity }) => ({
+    name,
+    duration,
     progress: 0,
     start,
-    end: start + track.duration
+    end: start + duration
 });
 
 const initializeTracks = (tracks, timeStart) =>
@@ -49,16 +50,22 @@ const TimerTracks = (tracks = []) => {
             setInitCurrent.call(this, index);
         },
         update: function (accExt) {
-            let progress;
+            let progress, indexTreat, current;
 
             tracksTreat =
                 tracksTreat ?? initializeTracks(tracks.slice(index), accExt);
 
-            index = tracksTreat.findIndex(({ end }) => end > accExt);
+            indexTreat = tracksTreat.findIndex(({ end }) => end > accExt);
 
-            this.current = tracksTreat[index] || CURRENT_DEFAULT;
-            progress = (accExt - this.current.start) / this.current.duration;
-            this.current.progress = Math.max(0, progress);
+            current = tracksTreat[indexTreat] || CURRENT_DEFAULT;
+            progress = (accExt - current.start) / current.duration;
+            current.progress = Math.max(0, progress);
+
+            if (current.name !== this.current.name) {
+                index = index + indexTreat;
+            }
+
+            this.current = current;
         }
     };
 };
