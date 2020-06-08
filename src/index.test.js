@@ -152,4 +152,48 @@ describe("Start", () => {
         timerTracks.update(1000);
         expect(timerTracks.current.name).toBe("end");
     });
+
+    it("onLeave / onEnter ", () => {
+        const onEnter_1 = jest.fn();
+        const onLeave_1 = jest.fn();
+
+        const onEnter_2 = jest.fn();
+        const onLeave_2 = jest.fn();
+
+        const tracks = [
+            { name: "intro", duration: 10 },
+            {
+                name: "start",
+                duration: 10,
+                onEnter: onEnter_1,
+                onLeave: onLeave_1
+            },
+            {
+                name: "end",
+                duration: 10,
+                onEnter: onEnter_2,
+                onLeave: onLeave_2
+            },
+            { name: "outro", duration: 10 }
+        ];
+
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0); //intro
+        timerTracks.update(5); //intro
+
+        // intro ~ start
+        timerTracks.update(15); //start
+        expect(timerTracks.current.name).toBe("start");
+        expect(onEnter_1).toHaveBeenCalledTimes(1); // ok
+
+        // start ~ end
+        timerTracks.update(25);
+        expect(timerTracks.current.name).toBe("end");
+        expect(onLeave_1).toHaveBeenCalledTimes(1); // ok
+        expect(onEnter_2).toHaveBeenCalledTimes(1); // KO !
+
+        //never
+        expect(onLeave_2).toHaveBeenCalledTimes(0);
+    });
 });

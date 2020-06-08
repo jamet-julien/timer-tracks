@@ -32,6 +32,10 @@ const TimerTracks = (tracks = []) => {
         this.current.progress = 0;
     }
 
+    function updateTrackTreat(index) {
+        tracksTreat = tracksTreat.slice(index);
+    }
+
     return {
         current: CURRENT_DEFAULT,
         goTo: function (targetName) {
@@ -61,8 +65,14 @@ const TimerTracks = (tracks = []) => {
             progress = (accExt - current.start) / current.duration;
             current.progress = Math.max(0, progress);
 
-            if (current.name !== this.current.name) {
-                index = index + indexTreat;
+            indexTreat && updateTrackTreat(indexTreat);
+
+            while (indexTreat > 0) {
+                indexTreat--;
+
+                tracks[index]?.onLeave && tracks[index].onLeave();
+                index++;
+                tracks[index]?.onEnter && tracks[index].onEnter();
             }
 
             this.current = current;
