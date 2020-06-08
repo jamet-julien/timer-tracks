@@ -196,4 +196,37 @@ describe("Start", () => {
         //never
         expect(onLeave_2).toHaveBeenCalledTimes(0);
     });
+
+    it("onLeave / onEnter born", () => {
+        const onEnter_1 = jest.fn();
+        const onLeave_1 = jest.fn();
+
+        const onEnter_2 = jest.fn();
+        const onLeave_2 = jest.fn();
+
+        const tracks = [
+            {
+                name: "start",
+                duration: 10,
+                onEnter: onEnter_1,
+                onLeave: onLeave_1
+            },
+            {
+                name: "end",
+                duration: 10,
+                onEnter: onEnter_2,
+                onLeave: onLeave_2
+            }
+        ];
+
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("start");
+        expect(onEnter_1).toHaveBeenCalledTimes(1); // ok
+
+        timerTracks.update(25);
+        expect(timerTracks.current.name).toBe(null);
+        expect(onLeave_2).toHaveBeenCalledTimes(1); // ok
+    });
 });

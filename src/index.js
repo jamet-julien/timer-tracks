@@ -24,10 +24,12 @@ const initializeTracks = (tracks, timeStart) =>
 
 const TimerTracks = (tracks = []) => {
     let index = 0;
+    let startTime = null;
     let tracksTreat = null;
 
     function setInitCurrent(index) {
         tracksTreat = null;
+        startTime = null;
         this.current = tracks[index] || CURRENT_DEFAULT;
         this.current.progress = 0;
     }
@@ -56,14 +58,20 @@ const TimerTracks = (tracks = []) => {
         update: function (accExt) {
             let progress, indexTreat, current;
 
+            startTime = startTime ?? accExt;
+
             tracksTreat =
-                tracksTreat ?? initializeTracks(tracks.slice(index), accExt);
+                tracksTreat ?? initializeTracks(tracks.slice(index), startTime);
 
             indexTreat = tracksTreat.findIndex(({ end }) => end > accExt);
 
             current = tracksTreat[indexTreat] || CURRENT_DEFAULT;
             progress = (accExt - current.start) / current.duration;
             current.progress = Math.max(0, progress);
+
+            if (startTime == accExt) {
+                tracks[index]?.onEnter && tracks[index].onEnter();
+            }
 
             indexTreat && updateTrackTreat(indexTreat);
 
@@ -73,6 +81,11 @@ const TimerTracks = (tracks = []) => {
                 tracks[index]?.onLeave && tracks[index].onLeave();
                 index++;
                 tracks[index]?.onEnter && tracks[index].onEnter();
+            }
+
+            if (accExt > startTime && indexTreat == -1) {
+                tracks[tracks.length - 1]?.onLeave &&
+                    tracks[tracks.length - 1].onLeave();
             }
 
             this.current = current;
