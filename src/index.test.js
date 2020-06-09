@@ -7,16 +7,16 @@ const tracks = [
     { name: "outro", duration: 20 }
 ];
 
-describe("Start", () => {
-    it("First import right", () => {
+describe("Eden path", () => {
+    it("TimerTracks should be a function", () => {
         expect(typeof TimerTracks).toBe("function");
     });
 
-    it("Required functions", () => {
+    it("TimerTracks() should return object", () => {
         const instance = TimerTracks();
     });
 
-    it("right path", () => {
+    it("update() should increment `name` and `progress`", () => {
         const timerTracks = TimerTracks(tracks);
         timerTracks.update(0);
         expect(timerTracks.current.name).toBe("intro");
@@ -37,81 +37,21 @@ describe("Start", () => {
         timerTracks.update(25);
         expect(timerTracks.current.name).toBe("end");
         expect(timerTracks.current.progress).toBe(0.5);
-
-        timerTracks.update(100);
-        expect(timerTracks.current.name).toBe(null);
-        expect(timerTracks.current.progress).toBe(0);
     });
+});
 
-    it("goto path", () => {
+describe("More", () => {
+    it("goTo() should move to right track", () => {
         const timerTracks = TimerTracks(tracks);
 
         timerTracks.goTo("end");
-
-        timerTracks.update(50);
         expect(timerTracks.current.name).toBe("end");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.update(60);
-        expect(timerTracks.current.name).toBe("end");
-        expect(timerTracks.current.progress).toBe(0.5);
-
-        timerTracks.update(70);
-        expect(timerTracks.current.name).toBe("outro");
-        expect(timerTracks.current.progress).toBe(0);
-    });
-
-    it("wrong goto", () => {
-        const timerTracks = TimerTracks(tracks);
-
-        timerTracks.goTo("wrong");
-
-        timerTracks.update(0);
-        expect(timerTracks.current.name).toBe(null);
-        expect(timerTracks.current.progress).toBe(0);
-    });
-
-    it("navigate next / prev", () => {
-        const timerTracks = TimerTracks(tracks);
-
-        timerTracks.update(0);
-        expect(timerTracks.current.name).toBe("intro");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.next();
-        expect(timerTracks.current.name).toBe("start");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.next();
-        expect(timerTracks.current.name).toBe("end");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.prev();
-        expect(timerTracks.current.name).toBe("start");
-        expect(timerTracks.current.progress).toBe(0);
-    });
-
-    it("limit next / prev", () => {
-        const timerTracks = TimerTracks(tracks);
-
-        timerTracks.update(0);
-        expect(timerTracks.current.name).toBe("intro");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.prev();
-        expect(timerTracks.current.name).toBe("intro");
-        expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.goTo("outro");
         expect(timerTracks.current.name).toBe("outro");
-        expect(timerTracks.current.progress).toBe(0);
-
-        timerTracks.next();
-        expect(timerTracks.current.name).toBe(null);
-        expect(timerTracks.current.progress).toBe(0);
     });
 
-    it("update next / prev ", () => {
+    it("next() should navigate between tracks and init progress to 0", () => {
         const timerTracks = TimerTracks(tracks);
 
         timerTracks.update(0);
@@ -119,41 +59,31 @@ describe("Start", () => {
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.next();
-        timerTracks.update(10);
         expect(timerTracks.current.name).toBe("start");
         expect(timerTracks.current.progress).toBe(0);
 
-        timerTracks.update(30);
+        timerTracks.next();
         expect(timerTracks.current.name).toBe("end");
-        expect(timerTracks.current.progress).toBe(0.5);
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("prev() should navigate between tracks and init progress to 0", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(10); //intro
+        timerTracks.update(15); //start
+        timerTracks.update(25); //end
 
         timerTracks.prev();
         expect(timerTracks.current.name).toBe("start");
         expect(timerTracks.current.progress).toBe(0);
-    });
 
-    it("without duration value", () => {
-        const tracks = [
-            { name: "intro", duration: 5 },
-            { name: "start" },
-            { name: "end" },
-            { name: "outro" }
-        ];
-
-        const timerTracks = TimerTracks(tracks);
-
-        timerTracks.update(0);
+        timerTracks.prev();
         expect(timerTracks.current.name).toBe("intro");
-
-        timerTracks.update(500);
-        expect(timerTracks.current.name).toBe("start");
-
-        timerTracks.goTo("end");
-        timerTracks.update(1000);
-        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0);
     });
 
-    it("onLeave / onEnter ", () => {
+    it("onLeave() and onEnter() should be called when track changed", () => {
         const onEnter_1 = jest.fn();
         const onLeave_1 = jest.fn();
 
@@ -196,8 +126,117 @@ describe("Start", () => {
         //never
         expect(onLeave_2).toHaveBeenCalledTimes(0);
     });
+});
 
-    it("onLeave / onEnter born", () => {
+describe("Combo", () => {
+    it("First call update() after goTo() should be init progress to 0", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("end");
+
+        timerTracks.update(50);
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.update(60);
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0.5);
+
+        timerTracks.update(70);
+        expect(timerTracks.current.name).toBe("outro");
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("First call update() after next() or prev() should be init progress to 0", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.next();
+        timerTracks.update(10);
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.update(30);
+        expect(timerTracks.current.name).toBe("end");
+        expect(timerTracks.current.progress).toBe(0.5);
+
+        timerTracks.prev();
+        expect(timerTracks.current.name).toBe("start");
+        expect(timerTracks.current.progress).toBe(0);
+    });
+});
+
+describe("Advanced", () => {
+    it("no duration update() should not increment current step", () => {
+        const tracks = [
+            { name: "intro", duration: 5 },
+            { name: "start" },
+            { name: "end" },
+            { name: "outro" }
+        ];
+
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("intro");
+
+        timerTracks.update(500);
+        expect(timerTracks.current.name).toBe("start");
+
+        timerTracks.goTo("end");
+        timerTracks.update(1000);
+        expect(timerTracks.current.name).toBe("end");
+    });
+});
+
+describe("Exception", () => {
+    it("last update() should return name NULL and progress 0", () => {
+        const timerTracks = TimerTracks(tracks);
+        timerTracks.update(0);
+
+        timerTracks.update(100);
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("wrong goTo() should return NULL", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("wrong");
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("prev() on start should return first track", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.prev();
+        expect(timerTracks.current.name).toBe("intro");
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("prev() on last should return NULL", () => {
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("outro");
+        expect(timerTracks.current.name).toBe("outro");
+        expect(timerTracks.current.progress).toBe(0);
+
+        timerTracks.next();
+        expect(timerTracks.current.name).toBe(null);
+        expect(timerTracks.current.progress).toBe(0);
+    });
+
+    it("onLeave() / onEnter() on born should be called", () => {
         const onEnter_1 = jest.fn();
         const onLeave_1 = jest.fn();
 
@@ -230,3 +269,43 @@ describe("Start", () => {
         expect(onLeave_2).toHaveBeenCalledTimes(1); // ok
     });
 });
+
+/*
+    it("onLeave / onEnter goto", () => {
+        const onEnter_1 = jest.fn();
+        const onLeave_1 = jest.fn();
+
+        const onEnter_2 = jest.fn();
+        const onLeave_2 = jest.fn();
+
+        const tracks = [
+            { name: "intro" },
+            {
+                name: "start",
+                duration: 10,
+                onEnter: onEnter_1,
+                onLeave: onLeave_1
+            },
+            { name: "end" },
+            {
+                name: "outro",
+                duration: 10,
+                onEnter: onEnter_2,
+                onLeave: onLeave_2
+            }
+        ];
+
+        const timerTracks = TimerTracks(tracks);
+
+        timerTracks.goTo("outro");
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("outro");
+        expect(onEnter_2).toHaveBeenCalledTimes(1); // ok
+
+        timerTracks.goTo("start");
+        timerTracks.update(0);
+        expect(timerTracks.current.name).toBe("start");
+        expect(onLeave_2).toHaveBeenCalledTimes(1); // ok
+        expect(onEnter_1).toHaveBeenCalledTimes(1); // ok
+    });
+*/
