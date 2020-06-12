@@ -5,7 +5,8 @@ const CURRENT_DEFAULT = {
     duration: Infinity
 };
 
-const prepareTrack = (start, { name, duration = Infinity }) => ({
+const prepareTrack = (start, { name, duration = Infinity }, index) => ({
+    index,
     name,
     duration,
     progress: 0,
@@ -13,10 +14,10 @@ const prepareTrack = (start, { name, duration = Infinity }) => ({
     end: start + duration
 });
 
-const initializeTracks = (tracks, timeStart) =>
+const computeToTrackTreat = (tracks, timeStart, startIndex) =>
     tracks.reduce(
-        (g, track) => [
-            [...g[0], prepareTrack(g[1], track)],
+        (g, track, i) => [
+            [...g[0], prepareTrack(g[1], track, startIndex + i)],
             g[1] + track.duration
         ],
         [[], timeStart]
@@ -27,67 +28,70 @@ const TimerTracks = (tracks = []) => {
     let startTime = null;
     let tracksTreat = null;
 
-    function setInitCurrent(index) {
+    function prepareJump() {
         tracksTreat = null;
         startTime = null;
-        this.current = tracks[index] || CURRENT_DEFAULT;
-        this.current.progress = 0;
     }
 
-    function updateTrackTreat(index) {
-        tracksTreat = tracksTreat.slice(index);
+    function shortenTrackTreat(position) {
+        tracksTreat = tracksTreat.slice(position);
+    }
+
+    function launchTrigger(oldIndex = null, newIndex = null, jump) {
+        let diff = Math.abs(oldIndex - newIndex);
+
+        if (oldIndex == newIndex) return;
+
+        if (diff > 1 && !jump) {
+            for (let i = 0; i < diff; i++) {
+                launchTrigger(oldIndex + i, oldIndex + (i + 1), false);
+            }
+        }
+
+        oldIndex = !jump && newIndex == null ? tracks.length - 1 : oldIndex;
+
+        tracks[oldIndex]?.onLeave && tracks[oldIndex].onLeave();
+        tracks[newIndex]?.onEnter && tracks[newIndex].onEnter();
     }
 
     return {
         current: CURRENT_DEFAULT,
         goTo: function (targetName) {
             index = tracks.findIndex(({ name }) => name === targetName);
-            setInitCurrent.call(this, index);
+            prepareJump();
 
             index = index < 0 ? tracks.length : index;
         },
         prev: function () {
             index = Math.max(0, index - 1);
-            setInitCurrent.call(this, index);
+            prepareJump();
         },
 
         next: function () {
             index = Math.min(tracks.length, index + 1);
-            setInitCurrent.call(this, index);
+            prepareJump();
         },
         update: function (accExt) {
-            let progress, indexTreat, nextCurrent;
+            let progress, nextCurrent, position;
 
             startTime = startTime ?? accExt;
+            const hasJumped = !(accExt - startTime);
 
             tracksTreat =
-                tracksTreat ?? initializeTracks(tracks.slice(index), startTime);
+                tracksTreat ??
+                computeToTrackTreat(tracks.slice(index), startTime, index);
 
-            indexTreat = tracksTreat.findIndex(({ end }) => end > accExt);
+            position = tracksTreat.findIndex(({ end }) => end > accExt);
+            nextCurrent = tracksTreat[position] || CURRENT_DEFAULT;
 
-            nextCurrent = tracksTreat[indexTreat] || CURRENT_DEFAULT;
             progress = (accExt - nextCurrent.start) / nextCurrent.duration;
             nextCurrent.progress = Math.max(0, progress);
 
-            indexTreat && updateTrackTreat(indexTreat);
+            nextCurrent.index && shortenTrackTreat(position);
 
-            if (startTime == accExt) {
-                tracks[index]?.onEnter && tracks[index].onEnter();
-            }
+            launchTrigger(this.current.index, nextCurrent.index, hasJumped);
 
-            while (indexTreat > 0) {
-                indexTreat--;
-
-                tracks[index]?.onLeave && tracks[index].onLeave();
-                index++;
-                tracks[index]?.onEnter && tracks[index].onEnter();
-            }
-
-            if (accExt > startTime && indexTreat == -1) {
-                tracks[tracks.length - 1]?.onLeave &&
-                    tracks[tracks.length - 1].onLeave();
-            }
-
+            index = nextCurrent.index;
             this.current = nextCurrent;
         }
     };
