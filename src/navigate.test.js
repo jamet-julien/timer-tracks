@@ -11,9 +11,11 @@ describe("goTo", () => {
         const timerTracks = TimerTracks(tracks);
 
         timerTracks.goTo("end");
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("end");
 
         timerTracks.goTo("outro");
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("outro");
     });
 
@@ -25,10 +27,12 @@ describe("goTo", () => {
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.next();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("start");
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.next();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("end");
         expect(timerTracks.current.progress).toBe(0);
     });
@@ -41,10 +45,12 @@ describe("goTo", () => {
         timerTracks.update(25); //end
 
         timerTracks.prev();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("start");
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.prev();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("intro");
         expect(timerTracks.current.progress).toBe(0);
     });
@@ -86,6 +92,7 @@ describe("Combo", () => {
         expect(timerTracks.current.progress).toBe(0.5);
 
         timerTracks.prev();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("start");
         expect(timerTracks.current.progress).toBe(0);
     });
@@ -133,6 +140,7 @@ describe("Exception", () => {
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.prev();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("intro");
         expect(timerTracks.current.progress).toBe(0);
     });
@@ -141,10 +149,12 @@ describe("Exception", () => {
         const timerTracks = TimerTracks(tracks);
 
         timerTracks.goTo("outro");
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe("outro");
         expect(timerTracks.current.progress).toBe(0);
 
         timerTracks.next();
+        timerTracks.update(0);
         expect(timerTracks.current.name).toBe(null);
         expect(timerTracks.current.progress).toBe(0);
     });

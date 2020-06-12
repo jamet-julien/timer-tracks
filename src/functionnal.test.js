@@ -40,6 +40,10 @@ describe("Eden path", () => {
         timerTracks.update(25);
         expect(timerTracks.current.name).toBe("end");
         expect(timerTracks.current.progress).toBe(0.5);
+
+        timerTracks.update(35);
+        expect(timerTracks.current.name).toBe("outro");
+        expect(timerTracks.current.progress).toBe(0);
     });
 });
 
@@ -59,6 +63,7 @@ describe("Advanced", () => {
 
         timerTracks.update(5);
         expect(timerTracks.current.name).toBe("start");
+
         timerTracks.update(1000);
         expect(timerTracks.current.name).toBe("start");
     });
