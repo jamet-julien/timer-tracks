@@ -79,7 +79,7 @@ timerTracks.current.progress; //? .5
 
 ### .goTo(name) <a id="goTo"></a>
 
-Set current track with name.
+Set current track with name. And launch `update()` to apply
 
 | argument | type     | Description             |
 | :------- | :------- | :---------------------- |
@@ -95,20 +95,22 @@ timerTracks.current.progress; //? 0
 
 ### .next() <a id="next"></a>
 
-Set current track with the next.
+Set current track with the next. And launch `update()` to apply
 
 > the limit is null
 
 ```js
 timerTracks.next();
+timerTracks.update(0);
 ```
 
 ### .prev() <a id="prev"></a>
 
-Set current track with the prev.
+Set current track with the prev. And launch `update()` to apply
 
 > the limit is the first tracks
 
 ```js
 timerTracks.prev();
+timerTracks.update(0);
 ```
