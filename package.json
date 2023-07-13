@@ -37,7 +37,7 @@
     "babel-jest": "26.0.1",
     "babel-loader": "8.1.0",
     "codecov": "3.7.1",
-    "commitizen": "4.1.2",
+    "commitizen": "4.3.0",
     "cz-conventional-changelog": "3.2.0",
     "ghooks": "2.0.4",
     "jest": "26.0.1",
